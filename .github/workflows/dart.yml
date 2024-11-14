@@ -24,6 +24,9 @@ jobs:
     - name: Install dependencies
       run: flutter pub get
 
+    - name: Migrate to Android embedding v2
+      run: flutter create --platforms=android .
+
     - name: Build APK
       run: flutter build apk --debug  # Use --release for release builds
 
