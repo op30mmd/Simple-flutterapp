@@ -28,7 +28,7 @@ jobs:
 
     - name: Install dependencies in New Project
       working-directory: new_project
-      run: flutter pub get
+      run: flutter clean && flutter pub get
 
     - name: Build APK
       working-directory: new_project
