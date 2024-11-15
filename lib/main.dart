@@ -1,86 +1,61 @@
+// Importing important packages require to connect
+// Flutter and Dart
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
+// Main Function
 void main() {
-  runApp(const MyApp());
+// Giving command to runApp() to run the app.
+
+/* The purpose of the runApp() function is to attach
+the given widget to the screen. */
+runApp(const MyApp());
 }
 
+// Widget is used to create UI in flutter framework.
+
+/* StatelessWidget is a widget, which does not maintain
+any state of the widget. */
+
+/* MyApp extends StatelessWidget and overrides its
+build method. */
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+const MyApp({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'HTTP Request Builder',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
-      home: const RequestBuilderPage(), // This replaces the default demo page
-    );
-  }
+// This widget is the root of your application.
+@override
+Widget build(BuildContext context) {
+	return MaterialApp(
+	// title of the application
+	title: 'Hello World Demo Application',
+	// theme of the widget
+	theme: ThemeData(
+		primarySwatch: Colors.lightGreen,
+	),
+	// Inner UI of the application
+	home: const MyHomePage(title: 'Home page'),
+	);
+}
 }
 
-class RequestBuilderPage extends StatefulWidget {
-  const RequestBuilderPage({super.key});
+/* This class is similar to MyApp instead it
+returns Scaffold Widget */
+class MyHomePage extends StatelessWidget {
+const MyHomePage({Key? key, required this.title}) : super(key: key);
+final String title;
 
-  @override
-  State<RequestBuilderPage> createState() => _RequestBuilderPageState();
+@override
+Widget build(BuildContext context) {
+	return Scaffold(
+	appBar: AppBar(
+		title: Text(title),
+	),
+	// Sets the content to the
+	// center of the application page
+	body: const Center(
+		// Sets the content of the Application
+		child: Text(
+		'Welcome to GeeksForGeeks!',
+	)),
+	);
 }
-
-class _RequestBuilderPageState extends State<RequestBuilderPage> {
-  final _urlController = TextEditingController();
-  String _response = '';
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('HTTP Request Builder'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _urlController,
-              decoration: const InputDecoration(
-                labelText: 'Enter URL',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () async {
-                try {
-                  final response = await http.get(Uri.parse(_urlController.text));
-                  setState(() {
-                    _response = response.body;
-                  });
-                } catch (e) {
-                  setState(() {
-                    _response = 'Error: $e';
-                  });
-                }
-              },
-              child: const Text('Send Request'),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Text(_response),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _urlController.dispose();
-    super.dispose();
-  }
 }
