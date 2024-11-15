@@ -59,6 +59,38 @@ jobs:
           echo "ios/Runner/Assets.xcassets directory not found, skipping copy."
         fi
 
+    - name: Copy other necessary files and directories
+      run: |
+        if [ -d "android/app/src/main/java" ]; then
+          cp -r android/app/src/main/java new_flutterapp/android/app/src/main/java
+        else
+          echo "android/app/src/main/java directory not found, skipping copy."
+        fi
+
+        if [ -d "ios/Runner" ]; then
+          cp -r ios/Runner new_flutterapp/ios/Runner
+        else
+          echo "ios/Runner directory not found, skipping copy."
+        fi
+
+        if [ -f "android/app/build.gradle" ]; then
+          cp android/app/build.gradle new_flutterapp/android/app/build.gradle
+        else
+          echo "android/app/build.gradle file not found, skipping copy."
+        fi
+
+        if [ -f "android/build.gradle" ]; then
+          cp android/build.gradle new_flutterapp/android/build.gradle
+        else
+          echo "android/build.gradle file not found, skipping copy."
+        fi
+
+        if [ -f "android/settings.gradle" ]; then
+          cp android/settings.gradle new_flutterapp/android/settings.gradle
+        else
+          echo "android/settings.gradle file not found, skipping copy."
+        fi
+
     - name: Navigate to new project directory
       run: cd new_flutterapp
 
