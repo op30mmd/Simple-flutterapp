@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Flutter CI - Auto Migration
 
 on:
   push:
@@ -17,31 +17,25 @@ jobs:
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.13.0' # Set your Flutter version
+        flutter-version: '3.13.0' # Specify your Flutter version
 
-    - name: Install dependencies
+    - name: Create a New Flutter Project
+      run: |
+        flutter create -t app new_project
+        cp -r lib new_project/lib
+        cp pubspec.yaml new_project/
+        if [ -d assets ]; then cp -r assets new_project/assets; fi
+
+    - name: Install dependencies in New Project
+      working-directory: new_project
       run: flutter pub get
 
-    - name: Ensure Android Embedding v2
-      run: |
-        if [ ! -f android/app/src/main/AndroidManifest.xml ]; then
-          echo "AndroidManifest.xml not found! Regenerating project..."
-          flutter create .
-        fi
-
-    - name: Validate Android Files
-      run: |
-        echo "Checking Android embedding version..."
-        if ! grep -q 'flutterEmbedding' android/app/src/main/AndroidManifest.xml; then
-          echo "Fixing AndroidManifest.xml for embedding v2..."
-          sed -i '/<activity/a\        <meta-data android:name="flutterEmbedding" android:value="2" />' android/app/src/main/AndroidManifest.xml
-        fi
-
     - name: Build APK
+      working-directory: new_project
       run: flutter build apk --release
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v3
       with:
         name: app-release.apk
-        path: build/app/outputs/flutter-apk/app-release.apk
+        path: new_project/build/app/outputs/flutter-apk/app-release.apk
