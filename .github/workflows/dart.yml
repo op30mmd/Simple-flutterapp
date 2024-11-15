@@ -30,36 +30,8 @@ jobs:
         echo "Current directory contents:"
         ls -la
 
-    - name: Create a New Flutter Project
-      run: |
-        flutter create -t app new_project
-        cp -r lib new_project/lib
-        cp pubspec.yaml new_project/
-        if [ -d assets ]; then
-          cp -r assets new_project/assets
-        fi
-        if [ -d android ]; then
-          cp -r android new_project/android
-        fi
-        if [ -d ios ]; then
-          cp -r ios new_project/ios
-        fi
-        if [ -d test ]; then
-          cp -r test new_project/test
-        fi
-
-    - name: List contents of new_project directory
-      run: |
-        echo "new_project directory contents:"
-        ls -la new_project
-
-    - name: Install dependencies in New Project
-      working-directory: new_project
+    - name: Install dependencies
       run: flutter pub get
-
-    - name: Migrate to Android embedding v2
-      working-directory: new_project
-      run: flutter create --platforms=android .
 
     - name: Build APK
       working-directory: new_project
@@ -68,7 +40,7 @@ jobs:
     - name: List contents of build directory
       run: |
         echo "Build directory contents:"
-        ls -la new_project/build/app/outputs/flutter-apk
+        ls -la build/app/outputs/flutter-apk
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v3
