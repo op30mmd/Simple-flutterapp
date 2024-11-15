@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
+  static const String _title = 'Flutter Stateful Clicker Counter';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Hello World Demo Application',
+      title: _title,
       theme: ThemeData(
-        primarySwatch: Colors.lightGreen,
+        primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Home page'),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
+  const MyHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -40,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('Flutter Demo Click Counter'),
       ),
       body: Center(
         child: Column(
@@ -51,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              style: const TextStyle(fontSize: 25),
             ),
           ],
         ),
