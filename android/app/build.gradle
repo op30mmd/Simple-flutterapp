@@ -7,7 +7,7 @@ android {
     compileSdkVersion 33
 
     defaultConfig {
-        applicationId "com.example.http_request_app"
+        applicationId "com.example.simple"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode flutterVersionCode
