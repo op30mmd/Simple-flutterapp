@@ -1,41 +1,125 @@
-name: Flutter CI - Auto Migration
+name: Build Flutter APK
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main  # You can change this to the branch you want to trigger the workflow
   pull_request:
-    branches: [main]
+    branches:
+      - main  # You can change this to the branch you want to trigger the workflow
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v3
+      with:
+        ref: main  # Ensure you are checking out the correct branch
 
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.13.0' # Specify your Flutter version
+        flutter-version: '3.7.1'  # Specify the Flutter version you want to use
 
-    - name: Create a New Flutter Project
+    - name: Create new Flutter project
+      run: flutter create -t app new_flutterapp
+
+    - name: List contents of the repository
       run: |
-        flutter create -t app new_project
-        cp -r lib new_project/lib
-        cp pubspec.yaml new_project/
-        if [ -d assets ]; then cp -r assets new_project/assets; fi
+        echo "Current directory contents:"
+        ls -la
 
-    - name: Install dependencies in New Project
-      working-directory: new_project
-      run: flutter clean && flutter pub get
+    - name: Copy lib directory if it exists
+      run: |
+        if [ -d "lib" ]; then
+          cp -r lib new_flutterapp/lib
+        else
+          echo "lib directory not found, skipping copy."
+        fi
+
+    - name: Copy assets directory if it exists
+      run: |
+        if [ -d "assets" ]; then
+          cp -r assets new_flutterapp/assets
+        else
+          echo "assets directory not found, skipping copy."
+        fi
+
+    - name: Copy pubspec.yaml
+      run: cp pubspec.yaml new_flutterapp/pubspec.yaml
+
+    - name: Copy Android resources if they exist
+      run: |
+        if [ -d "android/app/src/main/res" ]; then
+          cp -r android/app/src/main/res new_flutterapp/android/app/src/main/res
+        else
+          echo "android/app/src/main/res directory not found, skipping copy."
+        fi
+
+    - name: Copy iOS assets if they exist
+      run: |
+        if [ -d "ios/Runner/Assets.xcassets" ]; then
+          cp -r ios/Runner/Assets.xcassets new_flutterapp/ios/Runner/Assets.xcassets
+        else
+          echo "ios/Runner/Assets.xcassets directory not found, skipping copy."
+        fi
+
+    - name: Copy other necessary files and directories
+      run: |
+        if [ -d "android/app/src/main/java" ]; then
+          cp -r android/app/src/main/java new_flutterapp/android/app/src/main/java
+        else
+          echo "android/app/src/main/java directory not found, skipping copy."
+        fi
+
+        if [ -d "ios/Runner" ]; then
+          cp -r ios/Runner new_flutterapp/ios/Runner
+        else
+          echo "ios/Runner directory not found, skipping copy."
+        fi
+
+        if [ -f "android/app/build.gradle" ]; then
+          cp android/app/build.gradle new_flutterapp/android/app/build.gradle
+        else
+          echo "android/app/build.gradle file not found, skipping copy."
+        fi
+
+        if [ -f "android/build.gradle" ]; then
+          cp android/build.gradle new_flutterapp/android/build.gradle
+        else
+          echo "android/build.gradle file not found, skipping copy."
+        fi
+
+        if [ -f "android/settings.gradle" ]; then
+          cp android/settings.gradle new_flutterapp/android/settings.gradle
+        else
+          echo "android/settings.gradle file not found, skipping copy."
+        fi
+
+    - name: Navigate to new project directory
+      run: cd new_flutterapp
+
+    - name: List contents of new project directory
+      run: |
+        echo "New project directory contents:"
+        ls -la new_flutterapp
+
+    - name: Install dependencies
+      run: flutter pub get
+      working-directory: new_flutterapp
+
+    - name: Migrate to Android embedding v2
+      run: flutter create --platforms=android .
+      working-directory: new_flutterapp
 
     - name: Build APK
-      working-directory: new_project
-      run: flutter build apk --release
+      run: flutter build apk --debug  # Use --release for release builds
+      working-directory: new_flutterapp
 
-    - name: Upload APK artifact
+    - name: Upload APK
       uses: actions/upload-artifact@v3
       with:
-        name: app-release.apk
-        path: new_project/build/app/outputs/flutter-apk/app-release.apk
+        name: app-debug.apk
+        path: new_flutterapp/build/app/outputs/flutter-apk/app-debug.apk
