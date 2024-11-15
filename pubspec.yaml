@@ -1,18 +1,19 @@
 name: simple_flutterapp
-description: A simple Flutter application to make HTTP requests.
-
-publish_to: 'none'  # Remove this line if you want to publish to pub.dev
+description: A simple Flutter app to make HTTP requests (GET, POST, PUT, DELETE).
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.19.0 <3.0.0'
+  sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.13.4
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter:
+  uses-material-design: true
