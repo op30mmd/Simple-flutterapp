@@ -24,13 +24,40 @@ jobs:
     - name: Create new Flutter project
       run: flutter create -t app new_flutterapp
 
-    - name: Copy existing files to new project
+    - name: Copy lib directory if it exists
       run: |
-        cp -r lib new_flutterapp/lib
-        cp -r assets new_flutterapp/assets
-        cp pubspec.yaml new_flutterapp/pubspec.yaml
-        cp -r android/app/src/main/res new_flutterapp/android/app/src/main/res
-        cp -r ios/Runner/Assets.xcassets new_flutterapp/ios/Runner/Assets.xcassets
+        if [ -d "lib" ]; then
+          cp -r lib new_flutterapp/lib
+        else
+          echo "lib directory not found, skipping copy."
+        fi
+
+    - name: Copy assets directory if it exists
+      run: |
+        if [ -d "assets" ]; then
+          cp -r assets new_flutterapp/assets
+        else
+          echo "assets directory not found, skipping copy."
+        fi
+
+    - name: Copy pubspec.yaml
+      run: cp pubspec.yaml new_flutterapp/pubspec.yaml
+
+    - name: Copy Android resources if they exist
+      run: |
+        if [ -d "android/app/src/main/res" ]; then
+          cp -r android/app/src/main/res new_flutterapp/android/app/src/main/res
+        else
+          echo "android/app/src/main/res directory not found, skipping copy."
+        fi
+
+    - name: Copy iOS assets if they exist
+      run: |
+        if [ -d "ios/Runner/Assets.xcassets" ]; then
+          cp -r ios/Runner/Assets.xcassets new_flutterapp/ios/Runner/Assets.xcassets
+        else
+          echo "ios/Runner/Assets.xcassets directory not found, skipping copy."
+        fi
 
     - name: Navigate to new project directory
       run: cd new_flutterapp
