@@ -34,8 +34,7 @@ jobs:
       run: flutter pub get
 
     - name: Build APK
-      working-directory: new_project
-      run: flutter build apk --release
+      run: flutter build apk --debug
 
     - name: List contents of build directory
       run: |
