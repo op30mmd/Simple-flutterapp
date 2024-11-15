@@ -21,17 +21,34 @@ jobs:
       with:
         flutter-version: '3.7.1'  # Specify the Flutter version you want to use
 
+    - name: Create new Flutter project
+      run: flutter create -t app new_flutterapp
+
+    - name: Copy existing files to new project
+      run: |
+        cp -r lib new_flutterapp/lib
+        cp -r assets new_flutterapp/assets
+        cp pubspec.yaml new_flutterapp/pubspec.yaml
+        cp -r android/app/src/main/res new_flutterapp/android/app/src/main/res
+        cp -r ios/Runner/Assets.xcassets new_flutterapp/ios/Runner/Assets.xcassets
+
+    - name: Navigate to new project directory
+      run: cd new_flutterapp
+
     - name: Install dependencies
       run: flutter pub get
+      working-directory: new_flutterapp
 
     - name: Migrate to Android embedding v2
       run: flutter create --platforms=android .
+      working-directory: new_flutterapp
 
     - name: Build APK
       run: flutter build apk --debug  # Use --release for release builds
+      working-directory: new_flutterapp
 
     - name: Upload APK
       uses: actions/upload-artifact@v3
       with:
         name: app-debug.apk
-        path: build/app/outputs/flutter-apk/app-debug.apk
+        path: new_flutterapp/build/app/outputs/flutter-apk/app-debug.apk
