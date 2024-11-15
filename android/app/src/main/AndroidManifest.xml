@@ -1,22 +1,39 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.http_request_app">
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
-        android:label="http_request_app"
-        android:icon="@mipmap/ic_launcher">
+        android:label="HTTP Request App"
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
+        
+        <!-- Required for Flutter apps with the v2 embedding -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+        
+        <!-- Flutter Main Activity -->
         <activity
             android:name=".MainActivity"
-            android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
-            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|screenLayout|locale|layoutDirection|fontScale|screenDensity|uiMode"
+            android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
-            <meta-data
-                android:name="flutterEmbedding"
-                android:value="2" />
+            
+            <!-- Flutter intent filters for app launch -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        
+        <!-- Flutter Application Entry -->
+        <meta-data
+            android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
+            android:value="true"/>
     </application>
+
 </manifest>
