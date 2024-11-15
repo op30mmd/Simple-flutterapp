@@ -19,10 +19,17 @@ jobs:
       with:
         flutter-version: '3.13.0' # Specify your Flutter version
 
+    - name: Clean previous build (if exists)
+      run: rm -rf new_project || true
+
     - name: Create a New Flutter Project
       run: |
         echo "Creating a new Flutter project with Android V2 embedding..."
         flutter create -t app new_project
+
+    - name: Copy Custom Project Files
+      run: |
+        echo "Copying custom project files to the new Flutter project..."
         cp -r lib/ new_project/lib/
         cp pubspec.yaml new_project/
         if [ -d assets ]; then cp -r assets new_project/assets; fi
@@ -30,7 +37,7 @@ jobs:
     - name: Copy Custom Main File
       run: |
         echo "Replacing default main.dart with custom HTTP request code..."
-        cat > new_project/lib/main.dart <<- EOM
+        cat > new_project/lib/main.dart <<- 'EOM'
         import 'package:flutter/material.dart';
         import 'package:http/http.dart' as http;
         import 'dart:convert';
