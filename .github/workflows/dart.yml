@@ -17,13 +17,25 @@ jobs:
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.13.0' # Set the Flutter version you are using
+        flutter-version: '3.13.0' # Set your Flutter version
 
     - name: Install dependencies
       run: flutter pub get
 
-    #- name: Run tests
-      #run: flutter test
+    - name: Ensure Android Embedding v2
+      run: |
+        if [ ! -f android/app/src/main/AndroidManifest.xml ]; then
+          echo "AndroidManifest.xml not found! Regenerating project..."
+          flutter create .
+        fi
+
+    - name: Validate Android Files
+      run: |
+        echo "Checking Android embedding version..."
+        if ! grep -q 'flutterEmbedding' android/app/src/main/AndroidManifest.xml; then
+          echo "Fixing AndroidManifest.xml for embedding v2..."
+          sed -i '/<activity/a\        <meta-data android:name="flutterEmbedding" android:value="2" />' android/app/src/main/AndroidManifest.xml
+        fi
 
     - name: Build APK
       run: flutter build apk --release
